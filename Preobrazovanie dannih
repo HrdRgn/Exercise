@@ -1,0 +1,56 @@
+const base1 = {
+  name: "Куртка",
+  size: ["s", "m", "l"],
+};
+
+const base2 = {
+  name: "Куртка",
+  length: [30, 32, 34],
+  waist: [30, 32, 34],
+  color: ["blue", "gray"],
+};
+
+const base3 = {
+  name: "Джинсы",
+  length: [30, 32, 34],
+  params: [
+    {
+      waist: [30, 32, 34],
+      color: ["red", "blue"],
+    },
+    {
+      waist: [28, 29, 32],
+      color: ["gray", "blue"],
+      type: ["slim", "straight"],
+    },
+  ],
+  quality: ["good", "bad"],
+};
+
+function goodsList(base, carry) {
+  let kluchi = Object.keys(base);
+  let ourList = carry || [];
+  for (let i = 0; i < Object.keys(base).length; i++) {
+    let a = kluchi.shift();
+    if (Array.isArray(base[a])) {
+      ourList = base[a]
+        .map((item) => {
+          if (typeof item === "object") {
+            return (ourList = goodsList(item, ourList));
+          } else {
+            return ourList.map((it) => {
+              return Object.assign({}, it, { [a]: item });
+            });
+          }
+        })
+        .flat();
+    } else {
+      ourList.push({ [a]: base[a] });
+    }
+  }
+  return ourList;
+}
+
+console.log(goodsList(base1));
+console.log(goodsList(base2));
+console.log(goodsList(base3));

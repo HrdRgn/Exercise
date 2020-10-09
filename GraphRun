@@ -1,0 +1,81 @@
+const graphForCheapest = {
+  London: { SPB: 500 },
+  SPB: { Moscow: 100 },
+  Moscow: { Novosibirsk: 500, Amsterdam: 100, Paris: 300 },
+  Amsterdam: { Berlin: 70, SPB: 500, Paris: 50 },
+  Paris: { London: 300 },
+  Berlin: { London: 200 },
+  Novosibirsk: { SPB: 200 },
+};
+
+const graphForFastest = {
+  London: { SPB: 1 },
+  SPB: { Moscow: 1 },
+  Moscow: { Novosibirsk: 1, Amsterdam: 1, Paris: 1 },
+  Amsterdam: { Berlin: 1, SPB: 1, Paris: 1 },
+  Paris: { London: 1 },
+  Berlin: { London: 1 },
+  Novosibirsk: { SPB: 1 },
+};
+
+function findCheapestPrice(costs, processed) {
+  return Object.keys(costs).reduce((acc, rec) => {
+    if (acc === 0 || costs[rec] < costs[acc]) {
+      if (!processed.includes(rec)) {
+        return rec;
+      }
+    }
+    return acc;
+  }, 0);
+}
+
+function findTheWay(graph, start, end) {
+  let costs = {};
+  costs[start] = 10000
+  costs = Object.assign(costs, graph[start]);
+  const parents = { [end]: 0 };
+
+	for (let child in graph[start]) {
+    parents[child] = start;
+  }
+
+  const done = [];
+  let current = findCheapestPrice(costs, done);
+
+  while (current) {
+    let cost = costs[current];
+    let availablePath = graph[current];
+    for (let way in availablePath) {
+      if (way !== start) {
+        let newCost = cost + availablePath[way];
+        if (!costs[way] || costs[way] > newCost) {
+          costs[way] = newCost;
+          parents[way] = current;
+        }
+      }
+    }
+    done.push(current);
+    current = findCheapestPrice(costs, done);
+  }
+
+  let optimalPath = [end];
+  let parent = parents[end];
+  while (parent) {
+    optimalPath.push(parent);
+    parent = parents[parent];
+  }
+  optimalPath.reverse();
+
+  if (costs[end] < 50) {
+    return `Shortest path is '${optimalPath}'`;
+  } else {
+    return `Cheapest path is '${optimalPath}', total price is ${costs[end]}`;
+  }
+}
+
+console.log(findTheWay(graphForCheapest, "Moscow", "London"));
+console.log(findTheWay(graphForFastest, "Moscow", "London"));
+console.log(findTheWay(graphForCheapest, "Novosibirsk", "London"));
+console.log(findTheWay(graphForFastest, "Novosibirsk", "London"));
+console.log(findTheWay(graphForCheapest, "SPB", "London"));
+console.log(findTheWay(graphForFastest, "SPB", "London"));

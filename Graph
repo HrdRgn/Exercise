@@ -1,4 +1,4 @@
-const graphForCheapest = {
+const graphForCheapest = {                      // граф исходный (или для определения наиболее дешевого пути)
   London: { SPB: 500 },
   SPB: { Moscow: 100 },
   Moscow: { Novosibirsk: 500, Amsterdam: 100, Paris: 300 },
@@ -8,7 +8,7 @@ const graphForCheapest = {
   Novosibirsk: { SPB: 200 },
 };
 
-const graphForFastest = {
+const graphForFastest = {			// граф для определения наиболее быстрого пути (или исходный граф после приведения каждой цены на "перелет" к 1 при помощи map)
   London: { SPB: 1 },
   SPB: { Moscow: 1 },
   Moscow: { Novosibirsk: 1, Amsterdam: 1, Paris: 1 },
@@ -18,7 +18,7 @@ const graphForFastest = {
   Novosibirsk: { SPB: 1 },
 };
 
-function findCheapestPrice(costs, processed) {
+function findCheapestPrice(costs, processed) {       // функция для нахождения наиболее дешевого пути из точки, где мы находимся
   return Object.keys(costs).reduce((acc, rec) => {
     if (acc === 0 || costs[rec] < costs[acc]) {
       if (!processed.includes(rec)) {
@@ -29,13 +29,12 @@ function findCheapestPrice(costs, processed) {
   }, 0);
 }
 
-function findTheWay(graph, start, end) {
+function findTheWay(graph, start, end) {    // функция нахождения пути по алгоритму Дейкстры
   let costs = {};
-  costs[start] = 10000
+  costs[start] = 10000                  
   costs = Object.assign(costs, graph[start]);
   const parents = { [end]: 0 };
-
-	for (let child in graph[start]) {
+  for (let child in graph[start]) {
     parents[child] = start;
   }
 

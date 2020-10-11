@@ -1,0 +1,45 @@
+Таблица пользователей Tusers:
+ id | login | Фамилия  |   Имя
+----+-------+----------+---------
+  1 | Vasya | Васильев | Василий
+  2 | Petya | Петров   | Петр
+  3 | Irina | Ирискина | Ирина
+  
+Таблица платежей Tpayments:
+ id | user_id |  date_cr   | amount
+----+---------+------------+--------
+  1 |       1 | 2018-01-01 |     50
+  2 |       2 | 2018-01-05 |    100
+  3 |       1 | 2018-01-10 |     70
+  4 |       2 | 2018-01-15 |     80
+  5 |       4 | 2018-01-20 |     90
+
+Запросы:
+
+1. SELECT COUNT(*)                   
+FROM Tusers u, Tpayments p
+WHERE u.id = p.user_id;
+
+Выведет: count = 4
+
+2. SELECT COUNT(*) 
+FROM Tusers u LEFT JOIN Tpayments p 
+ON u.id=p.user_id;
+
+Выведет: count = 5          
+
+
+Запросы, возвращающие:
+
+1. Количество платежей меньше 75 для каждого пользователя
+
+SELECT u.*, COUNT(*) as Количество_платежей_меньше_75 
+FROM Tusers u INNER JOIN Tpayments p 
+ON u.id = p.user_id WHERE amount < 75 GROUP BY u.id, u.login, u.Фамилия, u.Имя;
+
+2. Дату минимального платежа по пользователю
+
+SELECT u.*, MIN(date_cr) as Дата_минимального_платежа 
+FROM Tusers u LEFT JOIN Tpayments p 
+ON u.id=p.user_id GROUP BY u.id, u.login, u.Фамилия, u.Имя 
+ORDER BY u.id;

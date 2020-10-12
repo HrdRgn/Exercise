@@ -20,13 +20,13 @@
 FROM Tusers u, Tpayments p
 WHERE u.id = p.user_id;
 
-Выведет: count = 4
+Выведет: count  4
 
 2. SELECT COUNT(*) 
 FROM Tusers u LEFT JOIN Tpayments p 
 ON u.id=p.user_id;
 
-Выведет: count = 5          
+Выведет: count  5          
 
 
 Запросы, возвращающие:
